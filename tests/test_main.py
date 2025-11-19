@@ -3,7 +3,7 @@ from main import generate_password
 
 
 def test_same_url_variants_produce_same_password():
-    mk = 'TestMasterKey1234567890ABCDEFG'  # deterministic test key
+    mk = 'TestMasterKey1234567890ABCDEFG'  # 确定性测试密钥
     urls = ['https://www.github.com', 'https://github.com', 'http://github.com', 'github.com']
     pwds = [generate_password(mk, u) for u in urls]
     assert len(set(pwds)) == 1

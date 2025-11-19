@@ -119,7 +119,7 @@ def generate_password(master_key: str, url: str, length: int = PASSWORD_LENGTH, 
     ]
 
     if length < len(categories):
-        raise ValueError(f"Password length must be at least {len(categories)} to include all required character categories")
+        raise ValueError(f"密码长度必须至少为 {len(categories)}，以包含所有必需的字符类别")
 
     used_positions = set()
     for cat in categories:
@@ -138,16 +138,16 @@ def generate_password(master_key: str, url: str, length: int = PASSWORD_LENGTH, 
 # --- 使用示例 ---
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Deterministic password generator based on a master key and URLs")
-    parser.add_argument('-k', '--master-key', help='Use this master key (string)')
-    parser.add_argument('-f', '--master-key-file', help='Read master key from this file')
-    parser.add_argument('--generate', action='store_true', help='Generate a new master key if none supplied (it will be saved to a file, not printed by default)')
-    parser.add_argument('--save-master-key', help='When generating a new key, save to this file (default: master_key.txt)')
-    parser.add_argument('--print-master-key', action='store_true', help='Print the generated or supplied master key (unsafe, only with user consent)')
-    parser.add_argument('-u', '--url', nargs='+', required=True, help='One or more URLs to generate passwords for')
-    parser.add_argument('-l', '--length', type=int, default=PASSWORD_LENGTH, help='Desired password length')
-    parser.add_argument('--include-path', action='store_true', help='Include path in URL normalization')
-    parser.add_argument('--include-query', action='store_true', help='Include query string in URL normalization')
+    parser = argparse.ArgumentParser(description="基于主密钥和网址的确定性密码生成器")
+    parser.add_argument('-k', '--master-key', help='使用此主密钥 (字符串)')
+    parser.add_argument('-f', '--master-key-file', help='从此文件读取主密钥')
+    parser.add_argument('--generate', action='store_true', help='如果未提供主密钥，则生成一个新主密钥（默认情况下将其保存到文件，而不是打印）')
+    parser.add_argument('--save-master-key', help='生成新密钥时，保存到此文件（默认：master_key.txt）')
+    parser.add_argument('--print-master-key', action='store_true', help='打印生成的或提供的主密钥（不安全，仅在用户同意时）')
+    parser.add_argument('-u', '--url', nargs='+', required=True, help='一个或多个要为其生成密码的 URL')
+    parser.add_argument('-l', '--length', type=int, default=PASSWORD_LENGTH, help='所需的密码长度')
+    parser.add_argument('--include-path', action='store_true', help='在 URL 规范化中包含路径')
+    parser.add_argument('--include-query', action='store_true', help='在 URL 规范化中包含查询字符串')
 
     args = parser.parse_args()
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
             with open(args.master_key_file, 'r', encoding='utf-8') as f:
                 master_key = f.read().strip()
         else:
-            parser.error(f"Master key file not found: {args.master_key_file}")
+            parser.error(f"主密钥文件未找到: {args.master_key_file}")
     elif os.environ.get('MASTER_KEY'):
         master_key = os.environ.get('MASTER_KEY')
     elif args.generate:
@@ -170,9 +170,9 @@ if __name__ == "__main__":
             with open(save_path, 'w', encoding='utf-8') as f:
                 f.write(master_key)
         except Exception as e:
-            parser.error(f"Unable to save generated master key to {save_path}: {e}")
+            parser.error(f"无法将生成的主密钥保存到 {save_path}: {e}")
     else:
-        parser.error('Provide a master key with --master-key, --master-key-file, MASTER_KEY env var, or use --generate')
+        parser.error('请使用 --master-key、--master-key-file、MASTER_KEY 环境变量提供主密钥，或使用 --generate 生成新密钥')
 
     if args.print_master_key:
         # 提示用户敏感性风险
